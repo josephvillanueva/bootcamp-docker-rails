@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  verify:
+    docker:
+      - image: cimg/ruby:3.2.1
+    resource_class: small
+    environment:
+      RAILS_ENV: test
+      BUNDLE_FROZEN: "true"
+    steps:
+      - checkout
+      - run: bundle install
+      - run: bundle exec rails db:prepare
+      - run: bundle exec rails zeitwerk:check
+      - run: bundle exec rails test
+workflows:
+  verify:
+    jobs:
+      - verify
